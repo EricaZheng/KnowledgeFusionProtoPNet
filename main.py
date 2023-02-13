@@ -5,29 +5,28 @@ import torchvision.transforms as transforms
 from datasets.bases import ImageDataset
 import argparse
 import re
-from torchinfo import summary
-
 
 from utils.helpers import makedir
 from utils.logger import Logger
-from models import model
-from core import push
-import train_test.train_and_test as tnt
+from models import model_cross_attn as model
+from core import push_cross_attn as push
+import train_test.train_and_test_cross_attn as tnt  
 from utils import save
 from utils.log import create_logger
 from datasets.preprocess import mean, std, preprocess_input_function
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-gpuid', nargs=1, type=str, default='1')  # python3 main.py -gpuid=0,1,2,3
+parser.add_argument('-gpuid', nargs=1, type=str, default='0')  # python3 main.py -gpuid=0,1,2,3
 parser.add_argument('-base_architecture', nargs=1, type=str, default='resnet50')
-parser.add_argument('-domain', nargs=1, type=str, default='Art')
+parser.add_argument('-domain', nargs=1, type=str, default='Art') # options: 'Art', 'Clipart', 'Product', 'Real_World'
 parser.add_argument('-run_id', default=0, type=int)
 parser.add_argument('-train_ratio', default=0.8, type=float)
 args = parser.parse_args()
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpuid[0]
 
 # book keeping namings and code
-from settings import method, img_size, prototype_shape, num_classes, \
+method = 'cross_attn'
+from settings import img_size, prototype_shape, num_classes, \
     prototype_activation_function, add_on_layers_type, experiment_run
 
 # load from args
@@ -38,7 +37,7 @@ run_id = args.run_id
 
 # todo: uncomment this if using command line
 # base_architecture = base_architecture[0]
-# domain = domain[0]
+domain = domain[0]
 
 
 base_architecture_type = re.match('^[a-z]*', base_architecture).group(0)
@@ -53,8 +52,8 @@ makedir(model_dir)
 shutil.copy(src=os.path.join(os.getcwd(), __file__), dst=model_dir)
 shutil.copy(src=os.path.join(os.getcwd(), 'settings.py'), dst=model_dir)
 shutil.copy(src=os.path.join(os.getcwd(), 'feat', base_architecture_type + '_features.py'), dst=model_dir)
-shutil.copy(src=os.path.join(os.getcwd(), 'models', 'model.py'), dst=model_dir)
-shutil.copy(src=os.path.join(os.getcwd(), 'train_test', 'train_and_test.py'), dst=model_dir)
+shutil.copy(src=os.path.join(os.getcwd(), 'models', 'model_{}.py'.format(method)), dst=model_dir)
+shutil.copy(src=os.path.join(os.getcwd(), 'train_test', 'train_and_test_{}.py'.format(method)), dst=model_dir)
 
 log, logclose = create_logger(log_filename=os.path.join(model_dir, 'train.log'))
 img_dir = os.path.join(model_dir, 'img')
@@ -139,7 +138,6 @@ ppnet = model.construct_PPNet(base_architecture=base_architecture,
                               num_classes=num_classes,
                               prototype_activation_function=prototype_activation_function,
                               add_on_layers_type=add_on_layers_type)
-summary(ppnet, (1, 3, 224, 224))
 
 ppnet = ppnet.cuda()
 ppnet_multi = torch.nn.DataParallel(ppnet)
