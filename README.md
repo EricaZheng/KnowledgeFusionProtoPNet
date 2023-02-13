@@ -22,12 +22,18 @@ This is the official code of Balancing Discriminability and Interpretability for
 See *Instructions for preparing the data* on [ProtoPNet](https://github.com/cfchen-duke/ProtoPNet).
 
 ## Run
-To train and evaluate
+To train and evaluate.
 
+For Office-Home
 ```
 python main.py
 ```
 
+
+For CUB-200-2011
+```
+python mainCUB.py
+```
 
 <!-- ## Code Structure
 To help users better understand and use our code, we briefly overview the functionality and implementation of each package and each module. -->
