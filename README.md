@@ -24,15 +24,15 @@ See *Instructions for preparing the data* on [ProtoPNet](https://github.com/cfch
 ## Run
 To train and evaluate.
 
-For Office-Home
+Office-Home:
 ```
-python main.py
+$ python main.py
 ```
 
 
-For CUB-200-2011
+CUB-200-2011:
 ```
-python mainCUB.py
+$ python mainCUB.py
 ```
 
 <!-- ## Code Structure
