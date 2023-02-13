@@ -4,7 +4,7 @@
 ## Introduction
 This is the official code of Balancing Discriminability and Interpretability for Image Recognition - A Knowledge Fusion Perspective.
 
-![image text](./plot/Co-train_align.eps)
+![image text](https://github.com/EricaZheng/KnowledgeFusionProtoPNet/blob/main/framework.jpg)
 
 
 ## Requirements
