@@ -29,8 +29,8 @@ python main.py
 ```
 
 
-## Code Structure
-To help users better understand and use our code, we briefly overview the functionality and implementation of each package and each module.
+<!-- ## Code Structure
+To help users better understand and use our code, we briefly overview the functionality and implementation of each package and each module. -->
 
 
 [//]: # (## License)
